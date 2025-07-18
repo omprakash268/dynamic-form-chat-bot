@@ -1,0 +1,15 @@
+<div class="messages-container" #scrollContainer>
+  <div class="messages-list">
+    <div
+      *ngFor="let message of messages"
+      class="message-wrapper"
+      [class.user-message]="message.sender === 'user'"
+      [class.bot-message]="message.sender === 'bot'"
+    >
+      <div class="message-bubble">
+        <p class="message-text">{{ message.text }}</p>
+        <span class="message-time">{{ formatTime(message.timestamp) }}</span>
+      </div>
+    </div>
+  </div>
+</div>
