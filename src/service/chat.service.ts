@@ -27,9 +27,13 @@ export class ChatService {
     // Add welcome message
     this.addMessage({
       id: this.generateId(),
-      text: "Hello! I'm your AI assistant. How can I help you today?",
       sender: 'bot',
       timestamp: new Date(),
+      response: {
+        type: 'Other',
+        formConfig: null,
+        text: "Hello! I'm your AI assistant. How can I help you today?",
+      },
     });
   }
 
@@ -37,9 +41,13 @@ export class ChatService {
     // Add user message
     const userMessage: Message = {
       id: this.generateId(),
-      text: text,
       sender: 'user',
       timestamp: new Date(),
+      response: {
+        type: 'Other',
+        formConfig: null,
+        text: text,
+      },
     };
 
     this.addMessage(userMessage);
@@ -61,26 +69,120 @@ export class ChatService {
 
     const botMessage: Message = {
       id: this.generateId(),
-      text: randomResponse,
       sender: 'bot',
       timestamp: new Date(),
+      response: {
+        type: 'Other',
+        formConfig: null,
+        text: randomResponse,
+      },
     };
 
     // Add some context-aware responses
     const lowerMessage = userMessage.toLowerCase();
     if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-      botMessage.text =
-        "Hello there! It's great to meet you. What would you like to chat about today?";
+      // botMessage.response.text =
+      //   "Hello there! It's great to meet you. What would you like to chat about today?";
+      botMessage.response = {
+        type: 'Form',
+        text:'',
+        formConfig: {
+          name: 'updatePersonalDetails',
+          title: 'Update Personal Details',
+          subtitle: 'Keep your information up to date',
+          fields: [
+            {
+              key: 'fullName',
+              label: 'Full Name',
+              type: 'text',
+              placeholder: 'Enter your full name',
+              validations: [
+                { type: 'required', message: 'Full name is required' },
+                {
+                  type: 'minLength',
+                  value: 2,
+                  message: 'Minimum 2 characters required',
+                },
+              ],
+            },
+            {
+              key: 'email',
+              label: 'Email Address',
+              type: 'email',
+              placeholder: 'Enter your email address',
+              validations: [
+                { type: 'required', message: 'Email is required' },
+                { type: 'email', message: 'Invalid email format' },
+              ],
+            },
+            {
+              key: 'dob',
+              label: 'Date of Birth',
+              type: 'date',
+              placeholder: 'Select your date of birth',
+              validations: [
+                { type: 'required', message: 'Date of birth is required' },
+              ],
+            },
+            {
+              key: 'gender',
+              label: 'Gender',
+              type: 'select',
+              placeholder: 'Select gender',
+              options: [
+                { label: 'Male', value: 'male' },
+                { label: 'Female', value: 'female' },
+                { label: 'Other', value: 'other' },
+              ],
+              validations: [
+                { type: 'required', message: 'Gender is required' },
+              ],
+            },
+            {
+              key: 'profilePhoto',
+              label: 'Profile Photo',
+              type: 'file',
+              placeholder: 'Upload a profile photo',
+              accept: ['image/jpeg', 'image/png'],
+              validations: [
+                { type: 'required', message: 'Profile photo is required' },
+                {
+                  type: 'fileType',
+                  value: ['image/jpeg', 'image/png'],
+                  message: 'Only JPEG or PNG allowed',
+                },
+              ],
+            },
+          ],
+          buttons: [
+            {
+              key: 'submit',
+              label: 'Update',
+              type: 'submit',
+              variant: 'primary',
+              iconRight: 'user-check',
+            },
+            {
+              key: 'cancel',
+              label: 'Cancel',
+              type: 'button',
+              variant: 'secondary',
+              iconRight: 'x',
+            },
+          ],
+        },
+      };
     } else if (lowerMessage.includes('help')) {
-      botMessage.text =
+      botMessage.response.text =
         "I'm here to help! Feel free to ask me anything you'd like to know or discuss.";
     } else if (lowerMessage.includes('thank')) {
-      botMessage.text = "You're very welcome! I'm happy to assist you anytime.";
+      botMessage.response.text =
+        "You're very welcome! I'm happy to assist you anytime.";
     } else if (
       lowerMessage.includes('bye') ||
       lowerMessage.includes('goodbye')
     ) {
-      botMessage.text =
+      botMessage.response.text =
         'Goodbye! It was nice chatting with you. Have a wonderful day!';
     }
 
