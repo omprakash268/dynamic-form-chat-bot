@@ -1,0 +1,64 @@
+<div class="card">
+  <h2>{{ formConfig.title }}</h2>
+  <p>{{ formConfig.subtitle }}</p>
+
+  <form [formGroup]="form">
+    <ng-container *ngFor="let field of formConfig.fields">
+      <div class="form-group">
+        <label *ngIf="field.type !== 'checkbox' && field.type !== 'switch'">{{ field.label }}</label>
+
+        <ng-container [ngSwitch]="field.type">
+          <input *ngSwitchCase="'text'" [formControlName]="field.key" [placeholder]="field.placeholder" type="text" />
+          <input *ngSwitchCase="'email'" [formControlName]="field.key" [placeholder]="field.placeholder" type="email" />
+          <input *ngSwitchCase="'number'" [formControlName]="field.key" type="number" />
+          <input *ngSwitchCase="'password'" [formControlName]="field.key" type="password" />
+          <input *ngSwitchCase="'date'" [formControlName]="field.key" type="date" />
+          <textarea *ngSwitchCase="'textarea'" [formControlName]="field.key" [placeholder]="field.placeholder"></textarea>
+          
+          <div *ngSwitchCase="'select'">
+            <select [formControlName]="field.key">
+              <option value="">{{ field.placeholder }}</option>
+              <option *ngFor="let opt of field.options" [value]="opt.value">{{ opt.label }}</option>
+            </select>
+          </div>
+
+          <div *ngSwitchCase="'radio'">
+            <label *ngFor="let opt of field.options">
+              <input type="radio" [value]="opt.value" [formControlName]="field.key" /> {{ opt.label }}
+            </label>
+          </div>
+
+          <div *ngSwitchCase="'checkbox'">
+            <label *ngFor="let opt of field.options">
+              <input type="checkbox" (change)="onCheckboxChange(field.key, opt.value, $event)" /> {{ opt.label }}
+            </label>
+          </div>
+
+          <div *ngSwitchCase="'switch'">
+            <label>
+              <input type="checkbox" [formControlName]="field.key" /> {{ field.label }}
+            </label>
+          </div>
+
+          <div *ngSwitchCase="'file'">
+            <input type="file" (change)="onFileChange($event, field)" />
+            <img *ngIf="filePreviews[field.key]" [src]="filePreviews[field.key]" width="100" />
+          </div>
+        </ng-container>
+
+        <div class="error" *ngIf="getError(field)">
+          {{ getError(field) }}
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="button-group">
+      <button *ngFor="let btn of formConfig.buttons"
+              [type]="btn.type"
+              [ngClass]="btn.variant"
+              (click)="onButtonClick(btn)">
+        {{ btn.label }}
+      </button>
+    </div>
+  </form>
+</div>

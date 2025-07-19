@@ -7,7 +7,12 @@
       [class.bot-message]="message.sender === 'bot'"
     >
       <div class="message-bubble">
-        <p class="message-text">{{ message.text }}</p>
+        <p class="message-text">{{ message.response.text }}</p>
+        <ng-container *ngIf="message.response.type.toLowerCase() == 'form'">
+          <app-dynamic-form
+            [formConfig]="message.response.formConfig"
+          ></app-dynamic-form>
+        </ng-container>
         <span class="message-time">{{ formatTime(message.timestamp) }}</span>
       </div>
     </div>

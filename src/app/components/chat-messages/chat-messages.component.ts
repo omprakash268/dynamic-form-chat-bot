@@ -1,10 +1,11 @@
 import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { Message } from '../../../model/message.model';
 import { CommonModule } from '@angular/common';
+import { DynamicFormComponent } from '../dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-chat-messages',
-  imports: [CommonModule],
+  imports: [CommonModule,DynamicFormComponent],
   templateUrl: './chat-messages.component.html',
   styleUrl: './chat-messages.component.scss',
 })
