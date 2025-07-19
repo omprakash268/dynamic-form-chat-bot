@@ -88,6 +88,7 @@ export class DynamicFormComponent {
     if (button.type === 'submit') {
       if (this.form.valid) {
         console.log('Form Data:', this.form.value);
+        alert("Data updated success fully !!")
       } else {
         this.form.markAllAsTouched();
       }

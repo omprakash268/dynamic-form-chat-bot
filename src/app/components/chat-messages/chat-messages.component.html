@@ -7,11 +7,8 @@
       [class.bot-message]="message.sender === 'bot'"
     >
       <div class="message-bubble">
-        <ng-container *ngIf="message.response.type.toLowerCase() != 'form'">
-          <p class="message-text">{{ message.response.text }}</p>
-        </ng-container>
+        <p class="message-text">{{ message.response.text }}</p>
         <ng-container *ngIf="message.response.type.toLowerCase() == 'form'">
-          <p class="message-text">{{ "Form data will appear soon..." }}</p>
           <app-dynamic-form
             [formConfig]="message.response.formConfig"
           ></app-dynamic-form>
